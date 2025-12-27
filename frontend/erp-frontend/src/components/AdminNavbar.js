@@ -17,6 +17,12 @@ function AdminNavbar() {
 
         <ul className="navbar-nav ms-auto">
 
+          <li className="nav-item">
+            <Link to="/admin/class-management" className="btn btn-primary mt-3">
+                          Add Student
+                        </Link>
+          </li>
+
 
           <li className="nav-item">
             <button className="btn btn-light ms-3" onClick={logout}>

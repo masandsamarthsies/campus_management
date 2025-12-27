@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'students',
     'teachers',
+    'academics',
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 

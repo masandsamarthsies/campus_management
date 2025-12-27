@@ -8,6 +8,7 @@ import StudentLogin from "./pages/StudentLogin";
 import TeacherLogin from "./pages/TeacherLogin";
 import StudentHome from "./pages/StudentHome";
 import TeacherHome from "./pages/TeacherHome";
+import AdminClassManagement from "./pages/AdminClassManagement";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/teacher-login" element={<TeacherLogin />} />
         <Route path="/student-home" element={<StudentHome />} />
         <Route path="/teacher-home" element={<TeacherHome />} />
+        <Route path="/admin/class-management" element={<AdminClassManagement />} />
 
       </Routes>
     </BrowserRouter>
