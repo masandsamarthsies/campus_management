@@ -5,6 +5,18 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from .models import Teacher
 from .serializers import TeacherSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Teacher
+from .serializers import TeacherSerializer
+
+
+@api_view(["GET"])
+def list_teachers(request):
+    teachers = Teacher.objects.all()
+    serializer = TeacherSerializer(teachers, many=True)
+    return Response(serializer.data)
+
 
 @csrf_exempt
 @api_view(['POST'])

@@ -2,6 +2,37 @@ from rest_framework import serializers
 from .models import Class
 from .models import ClassStudent
 from .models import Subject, TeachingAssignment
+from .models import Room
+from .models import TimeSlot
+from .models import Timetable
+from .models import Class, Subject
+from rest_framework import serializers
+
+class ClassSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Class
+        fields = "__all__"
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = "__all__"
+
+
+class TimetableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Timetable
+        fields = "__all__"
+
+class TimeSlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeSlot
+        fields = "__all__"
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = "__all__"
 
 class ClassSerializer(serializers.ModelSerializer):
     class Meta:

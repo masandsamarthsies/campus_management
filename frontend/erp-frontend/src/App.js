@@ -11,6 +11,9 @@ import TeacherHome from "./pages/TeacherHome";
 import AdminClassManagement from "./pages/AdminClassManagement";
 import ManageClasses from "./pages/ManageClasses";
 import ClassManagePage from "./pages/ClassManagePage";
+import RoomMaster from "./pages/RoomMaster";
+import RoomList from "./pages/RoomList";
+import TimeSlotManager from "./pages/TimeSlotManager";
 
 function App() {
   return (
@@ -29,6 +32,10 @@ function App() {
         <Route path="/admin/class-management" element={<AdminClassManagement />} />
         <Route path="/admin/manage-classes" element={<ManageClasses />} />
         <Route path="/admin/classes/:classId/manage" element={<ClassManagePage />}/>
+        <Route path="/admin/rooms" element={<RoomMaster />} />
+        <Route path="/admin/rooms/view" element={<RoomList />} />
+        <Route path="/admin/timeslots" element={<TimeSlotManager />} />
+
 
       </Routes>
     </BrowserRouter>

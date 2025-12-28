@@ -27,6 +27,21 @@ function AdminNavbar() {
                           Manage Classes
                         </Link>
           </li>
+          <li className="nav-item">
+            <Link to="/admin/rooms" className="btn btn-primary mt-3">
+                          ADD CLASSROOMS
+                        </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/admin/rooms/view" className="btn btn-primary mt-3">
+                          VIEW CLASSROOMS
+                        </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/admin/timeslots" className="btn btn-primary mt-3">
+                          TIMESLOTS
+                        </Link>
+          </li>
           
 
 

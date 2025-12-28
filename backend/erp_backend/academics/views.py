@@ -8,6 +8,212 @@ from students.models import Student
 from .models import Subject, TeachingAssignment, Class
 from .serializers import SubjectSerializer, TeachingAssignmentSerializer
 from teachers.models import Teacher  # adjust app name if needed
+from .models import Room
+from .serializers import RoomSerializer
+from .models import TimeSlot
+from .serializers import TimeSlotSerializer
+from .models import Timetable
+from .serializers import TimetableSerializer
+from .models import Class, Subject
+from .serializers import ClassSerializer, SubjectSerializer
+@api_view(["POST"])
+def create_timetable_with_slot(request):
+    data = request.data
+
+    # ---------- HARD VALIDATION ----------
+    required_fields = [
+        "class_obj", "subject", "teacher",
+        "room", "day", "start_time", "end_time"
+    ]
+
+    for field in required_fields:
+        if not data.get(field):
+            return Response(
+                {"error": f"{field} is required"},
+                status=400
+            )
+
+    # ---------- CREATE / GET TIMESLOT ----------
+    timeslot, _ = TimeSlot.objects.get_or_create(
+        day=data["day"],
+        start_time=data["start_time"],
+        end_time=data["end_time"]
+    )
+
+    # ---------- LOGICAL CLASH CHECKS ----------
+    if Timetable.objects.filter(
+        class_obj_id=data["class_obj"],
+        timeslot=timeslot,
+        is_cancelled=False
+    ).exists():
+        return Response({"error": "Class already has lecture"}, status=400)
+
+    if Timetable.objects.filter(
+        teacher_id=data["teacher"],
+        timeslot=timeslot,
+        is_cancelled=False
+    ).exists():
+        return Response({"error": "Teacher already busy"}, status=400)
+
+    if Timetable.objects.filter(
+        room_id=data["room"],
+        timeslot=timeslot,
+        is_cancelled=False
+    ).exists():
+        return Response({"error": "Room already booked"}, status=400)
+
+    # ---------- CREATE TIMETABLE ----------
+    Timetable.objects.create(
+        class_obj_id=int(data["class_obj"]),
+        subject_id=int(data["subject"]),
+        teacher_id=int(data["teacher"]),
+        room_id=int(data["room"]),
+        timeslot=timeslot
+    )
+
+    return Response(
+        {"message": "Timetable created successfully"},
+        status=status.HTTP_201_CREATED
+    )
+
+@api_view(["GET"])
+def list_timetable(request):
+    data = []
+    for t in Timetable.objects.all():
+        data.append({
+            "id": t.id,
+            "class": str(t.class_obj),
+            "subject": str(t.subject),
+            "teacher": str(t.teacher),
+            "room": str(t.room),
+            "timeslot": str(t.timeslot),
+            "is_cancelled": t.is_cancelled
+        })
+    return Response(data)
+@api_view(["GET"])
+def list_timetable(request):
+    data = []
+    for t in Timetable.objects.all():
+        data.append({
+            "id": t.id,
+            "class": str(t.class_obj),
+            "subject": str(t.subject),
+            "teacher": str(t.teacher),
+            "room": str(t.room),
+            "timeslot": str(t.timeslot),
+            "is_cancelled": t.is_cancelled
+        })
+    return Response(data)
+@api_view(["POST"])
+def cancel_class(request, timetable_id):
+    try:
+        timetable = Timetable.objects.get(id=timetable_id)
+        timetable.is_cancelled = True
+        timetable.cancelled_by_teacher = True
+        timetable.save()
+
+        return Response({"message": "Class cancelled"})
+    except Timetable.DoesNotExist:
+        return Response({"error": "Not found"}, status=404)
+
+
+
+@api_view(["GET"])
+def list_classes(request):
+    classes = Class.objects.all()
+    serializer = ClassSerializer(classes, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def list_subjects(request):
+    subjects = Subject.objects.all()
+    serializer = SubjectSerializer(subjects, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(["POST"])
+def create_timetable(request):
+    """
+    Admin assigns:
+    Class + Subject + Teacher + Room + TimeSlot
+    """
+    serializer = TimetableSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {"message": "Timetable entry created"},
+            status=status.HTTP_201_CREATED
+        )
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def list_timetable(request):
+    entries = Timetable.objects.all()
+    serializer = TimetableSerializer(entries, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def list_timeslots(request):
+    slots = TimeSlot.objects.all().order_by("day", "start_time")
+    serializer = TimeSlotSerializer(slots, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+def create_timeslot(request):
+    serializer = TimeSlotSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["DELETE"])
+def delete_timeslot(request, slot_id):
+    try:
+        slot = TimeSlot.objects.get(id=slot_id)
+        slot.delete()
+        return Response({"message": "TimeSlot deleted"})
+    except TimeSlot.DoesNotExist:
+        return Response({"error": "TimeSlot not found"}, status=404)
+@api_view(["GET"])
+def list_rooms(request):
+    rooms = Room.objects.all()   # 👈 REMOVE FILTER TEMPORARILY
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
+
+
+
+# @api_view(["GET"])
+# def list_rooms(request):
+#     rooms = Room.objects.filter(is_active=True)
+#     serializer = RoomSerializer(rooms, many=True)
+#     return Response(serializer.data)
+
+
+@api_view(["POST"])
+def create_room(request):
+    serializer = RoomSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["DELETE"])
+def delete_room(request, room_id):
+    try:
+        room = Room.objects.get(id=room_id)
+        room.delete()
+        return Response({"message": "Room deleted"})
+    except Room.DoesNotExist:
+        return Response({"error": "Room not found"}, status=404)
 
 
 @api_view(["POST"])
