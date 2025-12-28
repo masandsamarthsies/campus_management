@@ -7,6 +7,7 @@ function AddStudent() {
     name: "",
     roll_no: "",
     email: "",
+    course: "",
     semester: ""
   });
 
@@ -25,7 +26,8 @@ function AddStudent() {
         name: student.name,
         roll_no: student.roll_no,
         email: student.email,
-        semester: student.semester
+        course: student.course,               // MCA / MMS
+        semester: Number(student.semester)    // 1,2,3,4
       });
 
       alert("Student registered successfully. Default password: student@123");
@@ -35,6 +37,7 @@ function AddStudent() {
         name: "",
         roll_no: "",
         email: "",
+        course: "",
         semester: ""
       });
 
@@ -46,52 +49,77 @@ function AddStudent() {
 
   return (
     <>
-    <AdminNavbar />
-    <div className="container mt-5">
-      <h3>Add Student</h3>
+      <AdminNavbar />
 
-      <form onSubmit={handleSubmit}>
-        <input
-          className="form-control mb-3"
-          name="name"
-          placeholder="Student Name"
-          value={student.name}
-          onChange={handleChange}
-          required
-        />
+      <div className="container mt-5">
+        <h3>Add Student</h3>
 
-        <input
-          className="form-control mb-3"
-          name="roll_no"
-          placeholder="Roll Number"
-          value={student.roll_no}
-          onChange={handleChange}
-          required
-        />
+        <form onSubmit={handleSubmit}>
 
-        <input
-          className="form-control mb-3"
-          name="email"
-          placeholder="Email"
-          value={student.email}
-          onChange={handleChange}
-          required
-        />
+          {/* STUDENT NAME */}
+          <input
+            className="form-control mb-3"
+            name="name"
+            placeholder="Student Name"
+            value={student.name}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          className="form-control mb-3"
-          name="semester"
-          placeholder="Semester"
-          value={student.semester}
-          onChange={handleChange}
-          required
-        />
+          {/* ROLL NUMBER */}
+          <input
+            className="form-control mb-3"
+            name="roll_no"
+            placeholder="Roll Number"
+            value={student.roll_no}
+            onChange={handleChange}
+            required
+          />
 
-        <button className="btn btn-primary">
-          Register Student
-        </button>
-      </form>
-    </div>
+          {/* EMAIL */}
+          <input
+            className="form-control mb-3"
+            name="email"
+            placeholder="Email"
+            value={student.email}
+            onChange={handleChange}
+            required
+          />
+
+          {/* COURSE DROPDOWN */}
+          <select
+            className="form-control mb-3"
+            name="course"
+            value={student.course}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Course</option>
+            <option value="MCA">MCA</option>
+            <option value="MMS">MMS</option>
+          </select>
+
+          {/* SEMESTER DROPDOWN */}
+          <select
+            className="form-control mb-3"
+            name="semester"
+            value={student.semester}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Semester</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+          </select>
+
+          <button className="btn btn-primary">
+            Register Student
+          </button>
+
+        </form>
+      </div>
     </>
   );
 }

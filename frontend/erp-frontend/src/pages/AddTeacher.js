@@ -17,9 +17,13 @@ function AddTeacher() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://127.0.0.1:8000/api/teachers/register/",
-        teachers
+        {
+          name: teachers.name,
+          email: teachers.email,
+          department: teachers.department   // MCA / MMS
+        }
       );
 
       alert("Teacher registered successfully.\nDefault password: teacher@123");
@@ -33,49 +37,58 @@ function AddTeacher() {
 
     } catch (error) {
       alert("Error registering teacher");
-      console.error(error);
+      console.error(error.response?.data || error.message);
     }
   };
 
   return (
     <>
-    <AdminNavbar />
-    <div className="container mt-5">
-      <h3>Add Teacher</h3>
+      <AdminNavbar />
 
-      <form onSubmit={handleSubmit}>
-        <input
-          className="form-control mb-3"
-          name="name"
-          placeholder="Teacher Name"
-          value={teachers.name}
-          onChange={handleChange}
-          required
-        />
+      <div className="container mt-5">
+        <h3>Add Teacher</h3>
 
-        <input
-          className="form-control mb-3"
-          name="email"
-          placeholder="Email"
-          value={teachers.email}
-          onChange={handleChange}
-          required
-        />
+        <form onSubmit={handleSubmit}>
 
-        <input
-          className="form-control mb-3"
-          name="department"
-          placeholder="Department"
-          value={teachers.department}
-          onChange={handleChange}
-          required
-        />
+          {/* TEACHER NAME */}
+          <input
+            className="form-control mb-3"
+            name="name"
+            placeholder="Teacher Name"
+            value={teachers.name}
+            onChange={handleChange}
+            required
+          />
 
-        <button className="btn btn-success">
-          Register Teacher
-        </button>
-      </form>
-    </div>
+          {/* EMAIL */}
+          <input
+            className="form-control mb-3"
+            name="email"
+            placeholder="Email"
+            value={teachers.email}
+            onChange={handleChange}
+            required
+          />
+
+          {/* DEPARTMENT DROPDOWN */}
+          <select
+            className="form-control mb-3"
+            name="department"
+            value={teachers.department}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Department</option>
+            <option value="MCA">MCA</option>
+            <option value="MMS">MMS</option>
+          </select>
+
+          <button className="btn btn-success">
+            Register Teacher
+          </button>
+
+        </form>
+      </div>
     </>
   );
 }

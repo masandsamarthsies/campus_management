@@ -19,9 +19,15 @@ function AdminNavbar() {
 
           <li className="nav-item">
             <Link to="/admin/class-management" className="btn btn-primary mt-3">
-                          Add Student
+                          Add class
                         </Link>
           </li>
+          <li className="nav-item">
+            <Link to="/admin/manage-classes" className="btn btn-primary mt-3">
+                          Manage Classes
+                        </Link>
+          </li>
+          
 
 
           <li className="nav-item">
