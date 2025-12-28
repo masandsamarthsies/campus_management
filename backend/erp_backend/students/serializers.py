@@ -4,4 +4,4 @@ from .models import Student
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['name', 'roll_no', 'email', 'semester']
+        fields = '__all__'   # ✅ simplest & safest

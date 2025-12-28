@@ -5,19 +5,23 @@ from django.views.decorators.csrf import csrf_exempt
 from .serializers import StudentSerializer
 from .models import Student
 
+
 @csrf_exempt
 @api_view(['POST'])
 def register_student(request):
     serializer = StudentSerializer(data=request.data)
 
     if serializer.is_valid():
-        serializer.save()
+        serializer.save()   # ✅ course WILL be saved if serializer includes it
         return Response(
-            {"message": "Student registered successfully. Default password: sies@123"},
+            {
+                "message": "Student registered successfully. Default password: sies@123"
+            },
             status=status.HTTP_201_CREATED
         )
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -34,12 +38,16 @@ def login_student(request):
     try:
         student = Student.objects.get(email=email, password=password)
 
-        return Response({
-            "message": "Login successful",
-            "student_id": student.id,
-            "name": student.name,
-            "semester": student.semester
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "message": "Login successful",
+                "student_id": student.id,
+                "name": student.name,
+                "course": student.course,     # ✅ ADDED
+                "semester": student.semester
+            },
+            status=status.HTTP_200_OK
+        )
 
     except Student.DoesNotExist:
         return Response(
